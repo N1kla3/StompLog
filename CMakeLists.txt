@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 
-set(PROJECT_NAME template)
+set(PROJECT_NAME stomplog)
 project(${PROJECT_NAME})
 
 set(CMAKE_CXX_STANDARD 20)
@@ -10,12 +10,14 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
 set(SOURCE
-        DeleteThis.h
-        DeleteThis.cpp
+        Formatter.h
+        Formatter.cpp
+        Message.h
+        Message.cpp
         )
 
 set(TESTS
-        test.cpp
+        MessageTest.cpp
         )
 
 list(TRANSFORM TESTS PREPEND "tests/")

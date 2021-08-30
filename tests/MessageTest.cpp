@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include "Message.h"
 
-TEST(MessageTest, placeholder)
+TEST(MessageTest, GetFromPack)
 {
-
+    Message("Hello there", 4);
 }

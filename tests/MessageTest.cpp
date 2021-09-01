@@ -4,7 +4,11 @@
 #include "gtest/gtest.h"
 #include "Message.h"
 
+using namespace stomp;
+
 TEST(MessageTest, GetFromPack)
 {
-    Message("Hello there", 4);
+    float a = 1.f;
+    ASSERT_TRUE(GetPatternFromParam((float)1) == PATTERN::FLOAT);
+    ASSERT_TRUE(GetPatternFromParam("string") == PATTERN::STRING);
 }

@@ -4,7 +4,7 @@
 #include "gtest/gtest.h"
 #include "Message.h"
 
-using namespace stomp;
+using namespace stomp::log;
 
 TEST(MessageTest, GetFromPack)
 {

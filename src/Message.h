@@ -7,7 +7,7 @@
 #include <string>
 #include <iostream>
 
-namespace stomp
+namespace stomp::log
 {
 
     enum class PATTERN
@@ -18,28 +18,35 @@ namespace stomp
         UNKNOWN
     };
 
+    template<class T>struct tag_t{};
+    template<class T>constexpr tag_t<T> tag{};
+
+    template<class T, class...Ts>
+    constexpr bool is_string_like(tag_t<T>, Ts&&...){ return false; }
+    template<class T, class A>
+    constexpr bool is_string_like( tag_t<std::basic_string<T,A>> ){ return true; }
+
+    template<class T>
+    constexpr bool detect_string=is_string_like(tag<T>); // enable ADL extension
+
+    template<class T, class...Ts>
+    constexpr bool is_char_like(tag_t<T>, Ts&&...){ return false; }
+    constexpr bool is_char_like( tag_t<char> ){ return true; }
+    constexpr bool is_char_like( tag_t<wchar_t> ){ return true; }
+
+    template<class T>
+    constexpr bool detect_char=is_char_like(tag<T>); // enable ADL extension
+
     template<typename T>
-    PATTERN GetPatternFromParam(const T& arg)
+    PATTERN GetPatternFromParam(T arg)
     {
+        typedef typename std::remove_cv<T>::type type;
+        std::cout << typeid(T).name() << " " << typeid(type).name();
+        if constexpr (detect_char<type>) return PATTERN::STRING;
+        if constexpr (detect_string<type>) return PATTERN::STRING;
+        if constexpr (std::is_floating_point_v<type>) return PATTERN::FLOAT;
+        if constexpr (std::is_arithmetic_v<type>) return PATTERN::INTEGER;
         return PATTERN::UNKNOWN;
-    }
-
-    template<>
-    PATTERN GetPatternFromParam(const int& arg)
-    {
-        return PATTERN::INTEGER;
-    }
-
-    template<>
-    PATTERN GetPatternFromParam(const std::string& arg)
-    {
-        return PATTERN::STRING;
-    }
-
-    template<>
-    PATTERN GetPatternFromParam(const float& arg)
-    {
-        return PATTERN::FLOAT;
     }
 
     template<int Num, typename... Args>
